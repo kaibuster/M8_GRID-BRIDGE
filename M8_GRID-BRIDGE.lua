@@ -18,6 +18,9 @@ local DIM = 8
 local BRIGHT = 15
 local is_playing = false
 
+local m8_ok   = find_midi("M8") ~= nil
+local grid_ok = false
+
 -- gunter pixel art (40x48)
 local pw, ph = 40, 48
 local px = {
@@ -130,12 +133,24 @@ local function send_combo(note_a, note_b, ch)
 end
 
 function init()
+  grid_ok = g.device ~= nil
   clock.run(function()
     clock.sleep(1)
     draw_grid()
   end)
+  clock.run(function()
+    while true do
+      clock.sleep(2)
+      local was_ok = m8_ok
+      m8_ok = find_midi("M8") ~= nil
+      if m8_ok ~= was_ok then redraw() end
+    end
+  end)
   redraw()
 end
+
+g.add    = function() grid_ok = true  redraw() end
+g.remove = function() grid_ok = false redraw() end
 
 g.key = function(x, y, z)
   local pressed = z > 0
@@ -219,10 +234,15 @@ function redraw()
   screen.aa(0)
   screen.level(15)
   draw_sprite(0, 8)
-  screen.move(46, 20)
   screen.font_face(1)
   screen.font_size(8)
-  screen.text("M8 Grid-Bridge 2.0")
-  screen.move(46, 32)
+  screen.move(46, 14)
+  screen.text("M8 Grid-Bridge 2.1")
+  screen.move(46, 26)
+  screen.level(m8_ok and 15 or 4)
+  screen.text("M8:   " .. (m8_ok and "connected" or "not found"))
+  screen.move(46, 38)
+  screen.level(grid_ok and 15 or 4)
+  screen.text("Grid: " .. (grid_ok and "connected" or "not found"))
   screen.update()
 end
