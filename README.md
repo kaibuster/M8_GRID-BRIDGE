@@ -8,5 +8,5 @@ Connection:
 
 Using this requires use of the existing Toga monome norns script, and any script used alongside this TouchOSC controller will require you to edit the script. M8_GRID-BRIDGE does not require script edits to ensure Toga is compatible. All of the instructions for Toga setup can be found via the Toga github page. Following the standard connections for OSC - use UDP as your Connection 1, your Host IP address, Send Port 10111, and Receive Port 8002. 
 
-~wenk wenk~
+*wenk wenk*
 
